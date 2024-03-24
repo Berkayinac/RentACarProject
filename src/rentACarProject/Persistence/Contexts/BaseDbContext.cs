@@ -16,6 +16,7 @@ public class BaseDbContext : DbContext
     public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Model> Models { get; set; }
+    public DbSet<Fuel> Fuels { get; set; }
 
     public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration)
         : base(dbContextOptions)
@@ -28,3 +29,13 @@ public class BaseDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }
+
+
+// Package manager console i�erisinde 
+//Default project olarak persistence verilmelidir.
+// add-migration init enter yap�ld���nda olu�turacak.
+// update-database dendi�inde ise database'e migration'lar� updatelecektir.
+
+// yeni bir nesne eklendiğinde
+// add-migration AddFuel // eklenen tablo adi
+// update-database

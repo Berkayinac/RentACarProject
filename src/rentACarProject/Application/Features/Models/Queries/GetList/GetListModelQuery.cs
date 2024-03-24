@@ -5,6 +5,7 @@ using NArchitecture.Core.Application.Requests;
 using NArchitecture.Core.Application.Responses;
 using NArchitecture.Core.Persistence.Paging;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Models.Queries.GetList;
 
@@ -25,10 +26,16 @@ public class GetListModelQuery : IRequest<GetListResponse<GetListModelListItemDt
 
         public async Task<GetListResponse<GetListModelListItemDto>> Handle(GetListModelQuery request, CancellationToken cancellationToken)
         {
+            // brand ile de join etmesini saðlýyor Include()
             IPaginate<Model> models = await _modelRepository.GetListAsync(
+                //predicate : m => m.DailyPrice <3000,
+                //orderby, join yapýlarýnýda kullanabilrisin
+                include: m => m.Include(m => m.Brand),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken
+            //withDeleted:true -> yaparsan silnenleride getirir ama bu iþlem yapýldýðýnda 
+            // builder.HasQueryFilter(m => !m.DeletedDate.HasValue); kýsmýný configration'da ezmiþ oluyoruz.
             );
 
             GetListResponse<GetListModelListItemDto> response = _mapper.Map<GetListResponse<GetListModelListItemDto>>(models);
